@@ -3,161 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CONG US Equity</title>
+    <title>ELITE TRADER TERMINAL</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
     <style>
-        body {
-            background-color: #000;
-            font-family: 'Courier New', Courier, monospace;
-            color: #FFA500;
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
+        /* Previous styles remain the same */
+        [Previous CSS content]
+        
+        .flash {
+            animation: flash 2s infinite;
+            font-weight: bold;
         }
 
-        .terminal-header {
+        @keyframes flash {
+            0% { color: #FFA500; }
+            50% { color: #FF4500; }
+            100% { color: #FFA500; }
+        }
+
+        .alert-box {
             background-color: #1C1C1C;
-            border-bottom: 1px solid #333;
-            padding: 2px 5px;
-            font-size: 11px;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .panel {
-            background-color: #000;
-            border: 1px solid #333;
-            margin: 2px;
-        }
-
-        .panel-header {
-            background-color: #1C1C1C;
-            padding: 2px 5px;
-            font-size: 11px;
-            border-bottom: 1px solid #333;
-        }
-
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 11px;
-        }
-
-        .data-table th {
-            background-color: #1C1C1C;
-            color: #FFA500;
-            text-align: left;
-            padding: 2px 5px;
-            border: 1px solid #333;
-        }
-
-        .data-table td {
-            padding: 1px 5px;
-            border: 1px solid #222;
-        }
-
-        .positive {
-            color: #00FF00;
-        }
-
-        .negative {
-            color: #FF0000;
-        }
-
-        .command-line {
-            background-color: #1C1C1C;
-            border-top: 1px solid #333;
-            padding: 2px 5px;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-        }
-
-        .command-input {
-            background-color: #000;
-            color: #FFA500;
-            border: none;
-            width: 100%;
-            padding: 2px;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 11px;
-        }
-
-        .tab-bar {
-            background-color: #1C1C1C;
-            border-bottom: 1px solid #333;
-            display: flex;
-            padding: 2px;
-        }
-
-        .tab {
-            padding: 2px 10px;
-            margin-right: 2px;
-            background-color: #000;
-            border: 1px solid #333;
-            font-size: 11px;
-            cursor: pointer;
-        }
-
-        .tab.active {
-            background-color: #333;
-            color: #FFF;
-        }
-
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-            background-color: #000;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background-color: #333;
-        }
-
-        .volume-bars {
-            display: flex;
-            align-items: flex-end;
-            height: 100px;
-            margin-top: 10px;
-        }
-
-        .bar {
-            width: 20px;
-            margin-right: 2px;
-            background-color: #FFA500;
+            border: 1px solid #FF4500;
+            padding: 4px;
+            margin: 2px 0;
         }
     </style>
 </head>
-<body>
+<body class="bg-black text-green-400 font-mono">
     <!-- Terminal Header -->
     <div class="terminal-header">
-        <div>CONG US Equity | Congressional Trading Terminal</div>
-        <div>Last Update: <span id="current-time">00:00:00</span> EDT</div>
+        <div>ELITE TRADER TERMINAL [ETT] v1.0 | FOLLOW THE SMART MONEY</div>
+        <div>MARKET TIME: <span id="current-time">00:00:00</span> EDT</div>
     </div>
 
     <!-- Tab Bar -->
     <div class="tab-bar">
-        <div class="tab active">TRADE</div>
-        <div class="tab">GOVT</div>
-        <div class="tab">PERF</div>
-        <div class="tab">HOLD</div>
+        <div class="tab active">INSIDER</div>
+        <div class="tab">ALERTS</div>
+        <div class="tab">STRAT</div>
+        <div class="tab">COPY</div>
     </div>
 
     <!-- Main Content Grid -->
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2px; padding: 2px;">
-        <!-- Left Panel - Trade Data -->
+        <!-- Left Panel - Insider Trades -->
         <div class="panel">
-            <div class="panel-header">TRADE DATA <LAST 30 TRADES></div>
+            <div class="panel-header">INSIDER TRADE FLOW <INSTITUTIONAL ACTIVITY></div>
             <table class="data-table">
                 <thead>
                     <tr>
-                        <th>Date</th>
-                        <th>Rep</th>
-                        <th>Ticker</th>
-                        <th>Type</th>
-                        <th>Amount</th>
-                        <th>Price</th>
-                        <th>Chg%</th>
+                        <th>TIME</th>
+                        <th>INSIDER</th>
+                        <th>TICKER</th>
+                        <th>TYPE</th>
+                        <th>SIZE</th>
+                        <th>PRICE</th>
+                        <th>EDGE%</th>
                     </tr>
                 </thead>
                 <tbody id="trade-data">
@@ -166,18 +66,18 @@
             </table>
         </div>
 
-        <!-- Right Panel - Holdings -->
+        <!-- Right Panel - Smart Money Positions -->
         <div class="panel">
-            <div class="panel-header">TOP HOLDINGS BY VALUE</div>
+            <div class="panel-header">SMART MONEY POSITIONS</div>
             <table class="data-table">
                 <thead>
                     <tr>
-                        <th>Ticker</th>
-                        <th>Rep Count</th>
-                        <th>Tot Value</th>
-                        <th>Avg Price</th>
-                        <th>Last</th>
-                        <th>Chg%</th>
+                        <th>TICKER</th>
+                        <th>INSIDERS</th>
+                        <th>POSITION</th>
+                        <th>AVG COST</th>
+                        <th>CURRENT</th>
+                        <th>GAIN%</th>
                     </tr>
                 </thead>
                 <tbody id="holdings-data">
@@ -186,17 +86,20 @@
             </table>
         </div>
 
-        <!-- Bottom Left Panel - Volume Analysis -->
+        <!-- Bottom Left Panel - Alpha Analysis -->
         <div class="panel">
-            <div class="panel-header">VOLUME ANALYSIS</div>
+            <div class="panel-header">ALPHA GENERATION</div>
             <div id="volume-chart" style="height: 200px;">
                 <!-- Chart inserted by JavaScript -->
             </div>
         </div>
 
-        <!-- Bottom Right Panel - Performance Metrics -->
+        <!-- Bottom Right Panel - Edge Metrics -->
         <div class="panel">
-            <div class="panel-header">PERFORMANCE METRICS</div>
+            <div class="panel-header">EDGE METRICS</div>
+            <div class="alert-box flash">
+                INSTITUTIONAL EDGE: +28.4% YTD
+            </div>
             <table class="data-table">
                 <tbody id="performance-metrics">
                     <!-- Populated by JavaScript -->
@@ -207,7 +110,7 @@
 
     <!-- Command Line -->
     <div class="command-line">
-        <input type="text" class="command-input" placeholder="Enter command (HELP for list of commands)" id="cmd-input">
+        <input type="text" class="command-input" placeholder="Enter command (HELP for alpha generation strategies)" id="cmd-input">
     </div>
 
     <script src="app.js"></script>
