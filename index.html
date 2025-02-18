@@ -3,94 +3,211 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Congressional Trading Terminal</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <title>CONG US Equity</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            background-color: #000;
+            font-family: 'Courier New', Courier, monospace;
+            color: #FFA500;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .terminal-header {
+            background-color: #1C1C1C;
+            border-bottom: 1px solid #333;
+            padding: 2px 5px;
+            font-size: 11px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .panel {
+            background-color: #000;
+            border: 1px solid #333;
+            margin: 2px;
+        }
+
+        .panel-header {
+            background-color: #1C1C1C;
+            padding: 2px 5px;
+            font-size: 11px;
+            border-bottom: 1px solid #333;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+        }
+
+        .data-table th {
+            background-color: #1C1C1C;
+            color: #FFA500;
+            text-align: left;
+            padding: 2px 5px;
+            border: 1px solid #333;
+        }
+
+        .data-table td {
+            padding: 1px 5px;
+            border: 1px solid #222;
+        }
+
+        .positive {
+            color: #00FF00;
+        }
+
+        .negative {
+            color: #FF0000;
+        }
+
+        .command-line {
+            background-color: #1C1C1C;
+            border-top: 1px solid #333;
+            padding: 2px 5px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .command-input {
+            background-color: #000;
+            color: #FFA500;
+            border: none;
+            width: 100%;
+            padding: 2px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 11px;
+        }
+
+        .tab-bar {
+            background-color: #1C1C1C;
+            border-bottom: 1px solid #333;
+            display: flex;
+            padding: 2px;
+        }
+
+        .tab {
+            padding: 2px 10px;
+            margin-right: 2px;
+            background-color: #000;
+            border: 1px solid #333;
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+        .tab.active {
+            background-color: #333;
+            color: #FFF;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+            background-color: #000;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: #333;
+        }
+
+        .volume-bars {
+            display: flex;
+            align-items: flex-end;
+            height: 100px;
+            margin-top: 10px;
+        }
+
+        .bar {
+            width: 20px;
+            margin-right: 2px;
+            background-color: #FFA500;
+        }
+    </style>
 </head>
-<body class="bg-black text-green-400 font-mono">
-    <!-- Header Bar -->
-    <div class="bg-gray-900 border-b border-gray-700 p-2">
-        <div class="flex justify-between items-center">
-            <div class="text-sm">CONGRESSIONAL TRADING TERMINAL [CTT] v1.0</div>
-            <div class="text-sm">SERVER TIME: <span id="server-time">00:00:00</span></div>
+<body>
+    <!-- Terminal Header -->
+    <div class="terminal-header">
+        <div>CONG US Equity | Congressional Trading Terminal</div>
+        <div>Last Update: <span id="current-time">00:00:00</span> EDT</div>
+    </div>
+
+    <!-- Tab Bar -->
+    <div class="tab-bar">
+        <div class="tab active">TRADE</div>
+        <div class="tab">GOVT</div>
+        <div class="tab">PERF</div>
+        <div class="tab">HOLD</div>
+    </div>
+
+    <!-- Main Content Grid -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2px; padding: 2px;">
+        <!-- Left Panel - Trade Data -->
+        <div class="panel">
+            <div class="panel-header">TRADE DATA <LAST 30 TRADES></div>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Rep</th>
+                        <th>Ticker</th>
+                        <th>Type</th>
+                        <th>Amount</th>
+                        <th>Price</th>
+                        <th>Chg%</th>
+                    </tr>
+                </thead>
+                <tbody id="trade-data">
+                    <!-- Populated by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Right Panel - Holdings -->
+        <div class="panel">
+            <div class="panel-header">TOP HOLDINGS BY VALUE</div>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Ticker</th>
+                        <th>Rep Count</th>
+                        <th>Tot Value</th>
+                        <th>Avg Price</th>
+                        <th>Last</th>
+                        <th>Chg%</th>
+                    </tr>
+                </thead>
+                <tbody id="holdings-data">
+                    <!-- Populated by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Bottom Left Panel - Volume Analysis -->
+        <div class="panel">
+            <div class="panel-header">VOLUME ANALYSIS</div>
+            <div id="volume-chart" style="height: 200px;">
+                <!-- Chart inserted by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Bottom Right Panel - Performance Metrics -->
+        <div class="panel">
+            <div class="panel-header">PERFORMANCE METRICS</div>
+            <table class="data-table">
+                <tbody id="performance-metrics">
+                    <!-- Populated by JavaScript -->
+                </tbody>
+            </table>
         </div>
     </div>
 
-    <!-- Main Grid Layout -->
-    <div class="grid grid-cols-12 gap-1 p-1 h-screen">
-        <!-- Left Column - Market Overview -->
-        <div class="col-span-3 bg-gray-900 p-2 border border-gray-700">
-            <div class="text-xs border-b border-gray-700 pb-1 mb-2">MARKET OVERVIEW</div>
-            <div class="grid grid-cols-2 gap-2 text-xs">
-                <div>S&P 500</div>
-                <div class="text-right text-red-500">-0.25%</div>
-                <div>NASDAQ</div>
-                <div class="text-right text-green-500">+0.42%</div>
-                <div>DOW</div>
-                <div class="text-right text-red-500">-0.18%</div>
-                <div>VIX</div>
-                <div class="text-right text-green-500">+1.23%</div>
-            </div>
-            
-            <!-- Recent Alerts -->
-            <div class="mt-4">
-                <div class="text-xs border-b border-gray-700 pb-1 mb-2">RECENT ALERTS</div>
-                <div class="text-xs space-y-2" id="alerts">
-                    <!-- Alerts will be inserted here -->
-                </div>
-            </div>
-        </div>
-
-        <!-- Center Column - Trading Activity -->
-        <div class="col-span-6 bg-gray-900 p-2 border border-gray-700">
-            <div class="text-xs border-b border-gray-700 pb-1 mb-2">TRADING ACTIVITY</div>
-            <div class="overflow-x-auto">
-                <table class="w-full text-xs">
-                    <thead>
-                        <tr class="text-gray-500">
-                            <th class="text-left py-1">DATE</th>
-                            <th class="text-left">REP</th>
-                            <th class="text-left">TICKER</th>
-                            <th class="text-left">TYPE</th>
-                            <th class="text-right">AMOUNT</th>
-                            <th class="text-right">PRICE</th>
-                            <th class="text-right">DISCLOSURE</th>
-                        </tr>
-                    </thead>
-                    <tbody id="trades-body">
-                        <!-- Trades will be inserted here -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Right Column - Analytics -->
-        <div class="col-span-3 bg-gray-900 p-2 border border-gray-700">
-            <div class="text-xs border-b border-gray-700 pb-1 mb-2">ANALYTICS</div>
-            <canvas id="performance-chart" height="150"></canvas>
-            
-            <!-- Top Holdings -->
-            <div class="mt-4">
-                <div class="text-xs border-b border-gray-700 pb-1 mb-2">TOP HOLDINGS</div>
-                <div class="grid grid-cols-3 gap-1 text-xs">
-                    <div>TICKER</div>
-                    <div class="text-right">VALUE</div>
-                    <div class="text-right">CHG%</div>
-                </div>
-                <div id="holdings" class="mt-1">
-                    <!-- Holdings will be inserted here -->
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Command Bar -->
-    <div class="fixed bottom-0 left-0 right-0 bg-gray-900 border-t border-gray-700 p-2">
-        <div class="flex items-center">
-            <span class="text-gray-500 text-sm mr-2">CMD></span>
-            <input type="text" class="bg-black text-green-400 outline-none text-sm flex-grow" id="command-input" placeholder="Enter command (type 'help' for commands)">
-        </div>
+    <!-- Command Line -->
+    <div class="command-line">
+        <input type="text" class="command-input" placeholder="Enter command (HELP for list of commands)" id="cmd-input">
     </div>
 
     <script src="app.js"></script>
