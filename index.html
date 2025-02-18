@@ -6,9 +6,114 @@
     <title>ELITE TRADER TERMINAL</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
     <style>
-        /* Previous styles remain the same */
-        [Previous CSS content]
-        
+        body {
+            background-color: #000;
+            font-family: 'Courier New', Courier, monospace;
+            color: #FFA500;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .terminal-header {
+            background-color: #1C1C1C;
+            border-bottom: 1px solid #333;
+            padding: 2px 5px;
+            font-size: 11px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .panel {
+            background-color: #000;
+            border: 1px solid #333;
+            margin: 2px;
+        }
+
+        .panel-header {
+            background-color: #1C1C1C;
+            padding: 2px 5px;
+            font-size: 11px;
+            border-bottom: 1px solid #333;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+        }
+
+        .data-table th {
+            background-color: #1C1C1C;
+            color: #FFA500;
+            text-align: left;
+            padding: 2px 5px;
+            border: 1px solid #333;
+        }
+
+        .data-table td {
+            padding: 1px 5px;
+            border: 1px solid #222;
+        }
+
+        .positive {
+            color: #00FF00;
+        }
+
+        .negative {
+            color: #FF0000;
+        }
+
+        .command-line {
+            background-color: #1C1C1C;
+            border-top: 1px solid #333;
+            padding: 2px 5px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .command-input {
+            background-color: #000;
+            color: #FFA500;
+            border: none;
+            width: 100%;
+            padding: 2px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 11px;
+        }
+
+        .tab-bar {
+            background-color: #1C1C1C;
+            border-bottom: 1px solid #333;
+            display: flex;
+            padding: 2px;
+        }
+
+        .tab {
+            padding: 2px 10px;
+            margin-right: 2px;
+            background-color: #000;
+            border: 1px solid #333;
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+        .tab.active {
+            background-color: #333;
+            color: #FFF;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+            background-color: #000;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: #333;
+        }
+
         .flash {
             animation: flash 2s infinite;
             font-weight: bold;
