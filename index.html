@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Congressional Trading Terminal</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-black text-green-400 font-mono">
+    <!-- Header Bar -->
+    <div class="bg-gray-900 border-b border-gray-700 p-2">
+        <div class="flex justify-between items-center">
+            <div class="text-sm">CONGRESSIONAL TRADING TERMINAL [CTT] v1.0</div>
+            <div class="text-sm">SERVER TIME: <span id="server-time">00:00:00</span></div>
+        </div>
+    </div>
+
+    <!-- Main Grid Layout -->
+    <div class="grid grid-cols-12 gap-1 p-1 h-screen">
+        <!-- Left Column - Market Overview -->
+        <div class="col-span-3 bg-gray-900 p-2 border border-gray-700">
+            <div class="text-xs border-b border-gray-700 pb-1 mb-2">MARKET OVERVIEW</div>
+            <div class="grid grid-cols-2 gap-2 text-xs">
+                <div>S&P 500</div>
+                <div class="text-right text-red-500">-0.25%</div>
+                <div>NASDAQ</div>
+                <div class="text-right text-green-500">+0.42%</div>
+                <div>DOW</div>
+                <div class="text-right text-red-500">-0.18%</div>
+                <div>VIX</div>
+                <div class="text-right text-green-500">+1.23%</div>
+            </div>
+            
+            <!-- Recent Alerts -->
+            <div class="mt-4">
+                <div class="text-xs border-b border-gray-700 pb-1 mb-2">RECENT ALERTS</div>
+                <div class="text-xs space-y-2" id="alerts">
+                    <!-- Alerts will be inserted here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Center Column - Trading Activity -->
+        <div class="col-span-6 bg-gray-900 p-2 border border-gray-700">
+            <div class="text-xs border-b border-gray-700 pb-1 mb-2">TRADING ACTIVITY</div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-xs">
+                    <thead>
+                        <tr class="text-gray-500">
+                            <th class="text-left py-1">DATE</th>
+                            <th class="text-left">REP</th>
+                            <th class="text-left">TICKER</th>
+                            <th class="text-left">TYPE</th>
+                            <th class="text-right">AMOUNT</th>
+                            <th class="text-right">PRICE</th>
+                            <th class="text-right">DISCLOSURE</th>
+                        </tr>
+                    </thead>
+                    <tbody id="trades-body">
+                        <!-- Trades will be inserted here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Right Column - Analytics -->
+        <div class="col-span-3 bg-gray-900 p-2 border border-gray-700">
+            <div class="text-xs border-b border-gray-700 pb-1 mb-2">ANALYTICS</div>
+            <canvas id="performance-chart" height="150"></canvas>
+            
+            <!-- Top Holdings -->
+            <div class="mt-4">
+                <div class="text-xs border-b border-gray-700 pb-1 mb-2">TOP HOLDINGS</div>
+                <div class="grid grid-cols-3 gap-1 text-xs">
+                    <div>TICKER</div>
+                    <div class="text-right">VALUE</div>
+                    <div class="text-right">CHG%</div>
+                </div>
+                <div id="holdings" class="mt-1">
+                    <!-- Holdings will be inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Command Bar -->
+    <div class="fixed bottom-0 left-0 right-0 bg-gray-900 border-t border-gray-700 p-2">
+        <div class="flex items-center">
+            <span class="text-gray-500 text-sm mr-2">CMD></span>
+            <input type="text" class="bg-black text-green-400 outline-none text-sm flex-grow" id="command-input" placeholder="Enter command (type 'help' for commands)">
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
+
+// styles.css
+body {
+    font-family: 'Courier New', Courier, monospace;
+    margin: 0;
+    overflow: hidden;
+}
+
+/* Terminal-style scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #1a1a1a;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #333;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #444;
+}
+
+.blink {
+    animation: blink-animation 1s steps(2, start) infinite;
+}
+
+@keyframes blink-animation {
+    to {
+        visibility: hidden;
+    }
+}
+
+.trade-row:hover {
+    background-color: #1a1a1a;
+}
+
+.buy-badge {
+    color: #22c55e;
+}
+
+.sell-badge {
+    color: #ef4444;
+}
+
+// app.js
+document.addEventListener('DOMContentLoaded', function() {
+    // Update server time
+    function updateTime() {
+        const now = new Date();
+        document.getElementById('server-time').textContent = now.toLocaleTimeString();
+    }
+    setInterval(updateTime, 1000);
+    updateTime();
+
+    // Sample trades data
+    const trades = [
+        {
+            date: '2024-02-18',
+            rep: 'PELOSI',
+            stock: 'NVDA',
+            type: 'BUY',
+            amount: 250000,
+            price: 721.28,
+            disclosure: '2024-02-15'
+        },
+        {
+            date: '2024-02-17',
+            rep: 'PELOSI',
+            stock: 'MSFT',
+            type: 'SELL',
+            amount: 180000,
+            price: 398.67,
+            disclosure: '2024-02-14'
+        }
+    ];
+
+    // Initialize performance chart with dark theme
+    Chart.defaults.color = '#4ade80';
+    Chart.defaults.borderColor = '#374151';
+    
+    const ctx = document.getElementById('performance-chart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            datasets: [{
+                label: 'Portfolio Performance',
+                data: [12, 19, 15, 25, 22, 30],
+                borderColor: '#4ade80',
+                tension: 0.1,
+                pointBackgroundColor: '#4ade80'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    grid: {
+                        color: '#1f2937'
+                    }
+                },
+                x: {
+                    grid: {
+                        color: '#1f2937'
+                    }
+                }
+            }
+        }
+    });
+
+    // Populate trades table
+    const tradesBody = document.getElementById('trades-body');
+    trades.forEach(trade => {
+        const row = document.createElement('tr');
+        row.className = 'trade-row';
+        row.innerHTML = `
+            <td class="py-1">${trade.date}</td>
+            <td>${trade.rep}</td>
+            <td>${trade.stock}</td>
+            <td class="${trade.type === 'BUY' ? 'buy-badge' : 'sell-badge'}">${trade.type}</td>
+            <td class="text-right">$${trade.amount.toLocaleString()}</td>
+            <td class="text-right">$${trade.price}</td>
+            <td class="text-right">${trade.disclosure}</td>
+        `;
+        tradesBody.appendChild(row);
+    });
+
+    // Sample alerts
+    const alerts = [
+        'NEW DISCLOSURE: PELOSI (NVDA) - 2m ago',
+        'UNUSUAL VOLUME: MSFT - 15m ago',
+        'CLUSTER BUYING: AAPL - 1h ago'
+    ];
+
+    const alertsContainer = document.getElementById('alerts');
+    alerts.forEach(alert => {
+        const div = document.createElement('div');
+        div.textContent = alert;
+        alertsContainer.appendChild(div);
+    });
+
+    // Sample holdings
+    const holdings = [
+        { ticker: 'NVDA', value: '2.5M', change: '+15.2%' },
+        { ticker: 'MSFT', value: '1.8M', change: '-2.3%' },
+        { ticker: 'AAPL', value: '950K', change: '+5.1%' }
+    ];
+
+    const holdingsContainer = document.getElementById('holdings');
+    holdings.forEach(holding => {
+        const div = document.createElement('div');
+        div.className = 'grid grid-cols-3 gap-1 text-xs';
+        div.innerHTML = `
+            <div>${holding.ticker}</div>
+            <div class="text-right">${holding.value}</div>
+            <div class="text-right ${holding.change.startsWith('+') ? 'text-green-500' : 'text-red-500'}">${holding.change}</div>
+        `;
+        holdingsContainer.appendChild(div);
+    });
+
+    // Command input handling
+    const commandInput = document.getElementById('command-input');
+    commandInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            const command = this.value.toLowerCase();
+            if (command === 'help') {
+                alert('Available commands:\nhelp - Show this help\nfilter [rep] - Filter by representative\nsort [column] - Sort by column\nclear - Clear filters');
+            }
+            this.value = '';
+        }
+    });
+});
